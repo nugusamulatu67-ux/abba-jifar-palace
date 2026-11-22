@@ -43,14 +43,30 @@ function parsePort(value: string | undefined, fallback: number): number {
   return port
 }
 
-function resolveFromRoot(value: string | undefined, fallback: string): string {
-  const raw = value && value.trim() !== '' ? value : fallback
-  return path.isAbsolute(raw) ? raw : path.resolve(projectRoot, raw)
+function requiredEnv(name: string): string {
+  const value = process.env[name]?.trim()
+  if (!value || value.includes('replace-with-')) {
+    throw new Error(`${name} must be set to a real local value in .env. Copy .env.example and replace the placeholders.`)
+  }
+  return value
 }
 
 export const env = {
   port: parsePort(process.env.PORT, 4000),
   nodeEnv: process.env.NODE_ENV ?? 'development',
   clientOrigin: process.env.CLIENT_ORIGIN ?? 'http://localhost:5173',
-  databasePath: resolveFromRoot(process.env.DATABASE_PATH, path.join('database', 'dev.sqlite')),
+  databaseUrl: requiredEnv('DATABASE_URL'),
+  seedAdminEmail: (process.env.SEED_ADMIN_EMAIL ?? 'admin@abba-jifar.local').trim().toLowerCase(),
+  seedAdminPassword: process.env.SEED_ADMIN_PASSWORD?.trim() ?? '',
+}
+
+export function databaseSettings(connectionString: string = env.databaseUrl) {
+  const url = new URL(connectionString)
+  return {
+    user: decodeURIComponent(url.username),
+    password: decodeURIComponent(url.password),
+    host: url.hostname,
+    port: Number(url.port || 5432),
+    database: url.pathname.replace(/^\//, ''),
+  }
 }

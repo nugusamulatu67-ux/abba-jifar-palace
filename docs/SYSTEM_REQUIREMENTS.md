@@ -54,7 +54,7 @@ A person who is not signed in can read public tour information. Creating a booki
 ## Constraints
 
 - **C-1.** One heritage site, not a platform for many sites.
-- **C-2.** Relational data, starting with SQLite locally. See [SYSTEM_ARCHITECTURE.md](SYSTEM_ARCHITECTURE.md).
+- **C-2.** Relational data in PostgreSQL. See [SYSTEM_ARCHITECTURE.md](SYSTEM_ARCHITECTURE.md).
 - **C-3.** No paid services and no external AI APIs.
 - **C-4.** Phase 1 stops after the environment, documentation, and a health check. Booking, authentication, payments, and dashboards are later phases.
 - **C-5.** The existing Git repository is kept. Generated dependencies and secrets are not committed.

@@ -5,7 +5,7 @@
 The website is two programs in one repository:
 
 - a **React** frontend that runs in the browser
-- an **Express** API that enforces rules and talks to a **SQLite** database
+- an **Express** API that enforces rules and talks to **PostgreSQL**
 
 The browser never opens the database. It calls the API. The API is the only component that reads and writes records.
 
@@ -14,7 +14,7 @@ flowchart LR
   browser[Browser]
   client[React client]
   api[Express API]
-  db[(SQLite file)]
+  db[(PostgreSQL)]
 
   browser --> client
   client -->|"HTTP /api"| api
@@ -33,7 +33,7 @@ The frontend is responsible for:
 
 The frontend is not responsible for deciding who is allowed to do something. It can hide a link, and the API still checks the role.
 
-During development, Vite forwards any request that starts with `/api` to `http://localhost:4000`. The placeholder page calls `/api/health` on that proxy.
+During development, Vite forwards any request that starts with `/api` to `http://localhost:4000`. The placeholder page calls `/api/health` on that proxy. Phase 2 does not add booking or account screens.
 
 ## Backend
 
@@ -41,41 +41,47 @@ The API lives in `server/`. A request travels through a short, fixed path:
 
 1. `src/routes/` matches the URL.
 2. `src/controllers/` reads the request and sends the response.
-3. `src/services/` holds the business rules.
-4. `src/config/database.ts` opens SQLite.
+3. `src/services/` holds the business rules for that request.
+4. `src/repositories/` reads and writes tables.
+5. `src/config/database.ts` holds the PostgreSQL connection pool.
+
+Validation for a booking's party size and amount is in `src/validation/`. Password hashing is in `src/security/password.ts`. Database errors and transactions are in `src/db/`.
 
 Shared response shapes live in `shared/src/` so the client and the server name the same fields.
 
-Phase 1 implements one route: `GET /api/health`. It returns the service name, the time, and whether the database accepted `SELECT 1`.
+The only public route is still `GET /api/health`. It returns the service name, the time, and whether PostgreSQL accepted `SELECT 1`.
+
+`bookTour` is a repository function for a later booking route. It is not exposed as an HTTP endpoint yet. It locks the schedule, inserts the booking, and inserts the payment in one transaction. The database triggers described in [DATABASE_DESIGN.md](DATABASE_DESIGN.md) still apply if a future route writes SQL directly.
 
 ## Database
 
-`server/src/config/database.ts` opens the file in `DATABASE_PATH` using Node.js `node:sqlite`. The default file is `database/dev.sqlite`. The server creates the file if it is missing.
+PostgreSQL is the selected database. Many tourists and staff can book and update records at the same time. A transaction can lock one tour schedule, so two people cannot take the last seats together. Foreign keys keep payments, visitors, and bookings attached to real rows.
 
-Phase 1 does not create tables. The entities and relationships are in [DATABASE_DESIGN.md](DATABASE_DESIGN.md). The next phase adds the tables.
+The Windows PostgreSQL 18 service is already installed on port 5432, and its administrator password is not available to this project. `npm run db:up` therefore starts a second cluster with the same PostgreSQL programs, on port 5433, and stores its files in `database/pgdata`. That folder is gitignored. The service on port 5432 is left unchanged.
+
+`DATABASE_URL` in `.env` is the only connection setting the API reads. There is no database password in source code.
+
+Schema changes are SQL files in `database/migrations/`. `npm run db:migrate` records each applied file in `schema_migrations` and skips files that already ran. `npm run db:seed` inserts the development administrator, roles, tour packages, schedules, and guides. Account passwords are stored as salted scrypt hashes.
 
 ### Why this database
 
 | Option | Fit for this project |
 | --- | --- |
-| SQLite through `node:sqlite` | Relational, built into Node.js 22.13+, no extra install. This machine can run it now. **Selected for development.** |
-| PostgreSQL | Strong fit for many concurrent staff later. PostgreSQL is not installed here, and Docker Desktop is not running, so it could not be verified in this phase. |
-| A hosted database | Adds an account and a network dependency. The brief prefers local, free tools. |
-
-The table design uses ordinary relational ideas. A later phase can move the same tables to PostgreSQL if the team installs it.
+| PostgreSQL on this computer | Transactions, row locks, and foreign keys fit simultaneous bookings. The programs are already installed. **Selected.** |
+| SQLite | Used in Phase 1 to prove a connection. It does not lock and isolate concurrent bookings as safely as PostgreSQL. The old file had no tables and is no longer used. |
+| A hosted database | Adds an account and a network dependency. The project stays on a free local server. |
 
 ## Authentication and authorization
 
-Not built in this phase. The intended approach, so later work has one place to put it:
+Not built as an API in this phase. The tables and password helper are ready for it:
 
-- A visitor registers with email and password.
-- The server stores a password hash, never the password.
-- Sign-in returns a signed token (JWT). The client sends that token on later requests.
-- The API middleware reads the token, loads the role, and rejects forbidden actions with `403`.
-- Roles are Visitor, Staff, and Administrator, as listed in [SYSTEM_REQUIREMENTS.md](SYSTEM_REQUIREMENTS.md).
+- Roles are `visitor`, `staff`, and `administrator`.
+- A visitor registers with email and password. The server will store a scrypt hash, never the password. `hashPassword` and `verifyPassword` already do that for the seed administrator.
+- Sign-in will return a signed token (JWT). The client sends that token on later requests.
+- API middleware will read the token, load the role, and reject forbidden actions with `403`.
 - `JWT_SECRET` will live in `.env`. The example file reserves the name and the server does not read it yet.
 
-Authentication code will sit in `server/src/` beside the existing routes, controllers, and services. It will be added when that phase starts, rather than as empty folders now.
+The database also refuses some staff-only writes on its own. A payment recorder and a reception arrival must reference an active staff member or administrator.
 
 ## How the pieces communicate
 
@@ -89,31 +95,30 @@ flowchart TB
     routes[Routes]
     controllers[Controllers]
     services[Services]
-    dbAccess[Database access]
+    repositories[Repositories]
+    pool[PostgreSQL pool]
   end
 
-  databaseFile[(database/dev.sqlite)]
+  databaseServer[(PostgreSQL)]
 
   pages -->|"fetch /api"| routes
   routes --> controllers
   controllers --> services
-  services --> dbAccess
-  dbAccess --> databaseFile
+  services --> repositories
+  repositories --> pool
+  pool --> databaseServer
 ```
 
-In Phase 1 the only conversation is:
+Today the only HTTP conversation is the health check:
 
 1. The page requests `GET /api/health`.
 2. Vite proxies that request to Express.
 3. The health controller asks the health service for a status object.
-4. The service runs `SELECT 1` through the database module.
+4. The service runs `SELECT 1` through the connection pool.
 5. Express returns JSON. The page prints the status, service name, database result, and time.
 
-When features arrive, the same path applies: the page calls `/api/...`, a route and controller accept it, a service applies the rule, and the database module runs SQL.
+## What exists after Phase 2
 
-## What exists after Phase 1
-
-- The client shows a placeholder page and the health result.
-- The API answers `GET /` and `GET /api/health`.
-- The database connection can be opened and checked.
-- Accounts, tours, bookings, visitors, payments, and dashboards are documented and not coded.
+- The Phase 1 placeholder page and `GET /api/health` still work, now against PostgreSQL.
+- The schema, migration, seed command, and booking integrity rules exist.
+- Sign-in, booking screens, payments, and the dashboard are not HTTP features yet.

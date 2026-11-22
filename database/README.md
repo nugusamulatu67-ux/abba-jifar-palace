@@ -1,19 +1,27 @@
 # Database
 
-Phase 1 configures a local SQLite database and checks that the API can open it. The table design is described in [../docs/DATABASE_DESIGN.md](../docs/DATABASE_DESIGN.md). The `CREATE TABLE` statements are intentionally not written yet.
+PostgreSQL holds the application data. The table design and booking rules are in [../docs/DATABASE_DESIGN.md](../docs/DATABASE_DESIGN.md).
 
-## File
+## Local server
 
-`DATABASE_PATH` in the root `.env` file selects the database file. The default is:
+`DATABASE_URL` in the root `.env` file selects the server, user, password, and database. The usual development URL uses port **5433**:
 
 ```text
-database/dev.sqlite
+postgresql://abba_jifar:your-database-password@127.0.0.1:5433/abba_jifar
 ```
 
-The server creates the file and its folder the first time it connects. Database files are listed in `.gitignore`, so each developer gets a local database and nothing private is committed.
+`npm run db:up` starts a project-local cluster with the PostgreSQL programs already installed on this computer. Its files live in `database/pgdata/` and are not committed. The Windows PostgreSQL service on port 5432 is a different server and is not changed.
 
-## Why SQLite for now
+## Commands
 
-Node.js 22.13 and later include SQLite in the standard library (`node:sqlite`). This machine has Node.js, and it does not have a running PostgreSQL server. SQLite is relational, free, and needs no extra database service, so the connection can be installed and tested in this phase.
+From the repository root:
 
-PostgreSQL remains a possible production database. Moving to it is a later decision, after the schema exists. The conceptual model in the design document uses ordinary tables and relationships and does not depend on a SQLite-only feature.
+```powershell
+npm run db:setup
+```
+
+That starts PostgreSQL, applies `database/migrations/001_init.sql`, and inserts the development rows. Details and the other commands are in [../docs/DEVELOPMENT_GUIDE.md](../docs/DEVELOPMENT_GUIDE.md).
+
+## Phase 1 file
+
+`database/dev.sqlite` may still be on disk from the first connection test. It has no application tables. The API does not open it anymore.
