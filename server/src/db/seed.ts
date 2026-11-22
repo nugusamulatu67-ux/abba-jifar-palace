@@ -102,9 +102,10 @@ export async function seed(connectionString: string): Promise<void> {
     await client.query(
       `INSERT INTO roles (name, description)
        VALUES
-         ('visitor', 'Books tours and views their own bookings.'),
-         ('staff', 'Looks up bookings, records visitors, and updates payment status.'),
-         ('administrator', 'Manages users, tours, bookings, and the same daily records as staff.')
+        ('tourist', 'Registers, signs in, and uses personal tourist services.'),
+        ('tour_guide', 'Sees assigned tours and the visitors on those tours.'),
+        ('receptionist', 'Verifies bookings and checks visitors in.'),
+        ('administrator', 'Manages the system and staff accounts.')
        ON CONFLICT (name) DO NOTHING`,
     )
 

@@ -1,14 +1,16 @@
 import cors from 'cors'
 import express from 'express'
 import { env } from './config/env.ts'
+import { accessRouter } from './routes/access.routes.ts'
+import { authRouter } from './routes/auth.routes.ts'
 import { healthRouter } from './routes/health.routes.ts'
 
 export function createApp() {
   const app = express()
 
   app.disable('x-powered-by')
-  app.use(cors({ origin: env.clientOrigin }))
-  app.use(express.json())
+  app.use(cors({ origin: env.clientOrigin, credentials: true }))
+  app.use(express.json({ limit: '20kb' }))
 
   app.get('/', (_req, res) => {
     res.json({
@@ -18,6 +20,19 @@ export function createApp() {
   })
 
   app.use('/api', healthRouter)
+  app.use('/api/auth', authRouter)
+  app.use('/api', accessRouter)
+
+  app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    if (error instanceof SyntaxError) {
+      res.status(400).json({ error: 'Request body must be JSON.' })
+      return
+    }
+    console.error(error)
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Something went wrong. Please try again.' })
+    }
+  })
 
   return app
 }

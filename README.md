@@ -2,7 +2,7 @@
 
 Tour booking and visitor management website for Abba Jifar Palace, a historical heritage site in Jimma, Ethiopia.
 
-Phase 1 set up the environment and a health check. Phase 2 adds the PostgreSQL schema, migrations, and seed data. Booking, sign-in, and the dashboard are not built yet.
+Phase 1 set up the environment and a health check. Phase 2 adds the PostgreSQL schema, migrations, and seed data. Phase 3 adds sign-in, tourist registration, and role checks. Booking screens and the dashboard are not built yet.
 
 ## Stack
 
@@ -27,7 +27,7 @@ npm run dev
 - Website: http://localhost:5173
 - API health: http://localhost:4000/api/health
 
-The home page requests `/api/health` and shows the result. `status` and `database.status` should both be successful (`ok` and `connected`).
+The home page requests `/api/health` and shows the result. `status` and `database.status` should both be successful (`ok` and `connected`). Sign-in is at http://localhost:5173/login and tourist registration is at http://localhost:5173/register.
 
 ## Documentation
 
@@ -42,19 +42,14 @@ The home page requests `/api/health` and shows the result. `status` and `databas
 
 ## Layout
 
+The detailed folder map is in [docs/DEVELOPMENT_GUIDE.md](docs/DEVELOPMENT_GUIDE.md). The top-level directories are:
+
 ```text
-client/                 React website
-server/src/config/      Environment and PostgreSQL connection
-server/src/routes/      API routes
-server/src/controllers/ Request handlers
-server/src/services/    Business logic
-server/src/repositories/ Table access, including booking writes
-server/src/db/          Migrations, seed data, and transactions
-server/tests/           Health and database checks
-shared/src/             Types shared by client and server
-database/migrations/    SQL schema
-database/pgdata/        Local PostgreSQL files, not committed
-docs/                   Project documents
+client/     React website
+server/     Express API
+shared/     Types used by the client and the server
+database/   SQL migrations and the local PostgreSQL data directory
+docs/       Project documents
 ```
 
 ## Team workflow
@@ -73,4 +68,6 @@ The project is on `main` and tracks https://github.com/nugusamulatu67-ux/abba-ji
 
 Phase 1: project structure, documentation, a placeholder page, and `GET /api/health`.
 
-Phase 2: PostgreSQL schema, migrations, seed data, and booking integrity rules. Sign-in and booking screens are still later phases. See the roadmap.
+Phase 2: PostgreSQL schema, migrations, seed data, and booking integrity rules.
+
+Phase 3: tourist registration, sign-in, logout, and server-side role checks. Booking screens are still later phases. See the roadmap.

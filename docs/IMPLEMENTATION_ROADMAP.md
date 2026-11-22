@@ -12,7 +12,7 @@ These phases are the product. Rough times assume one small team working in Curso
 | --- | --- | --- | --- |
 | 1. Foundation | Tooling, folders, docs, health check, database connection | — | Done |
 | 2. Schema | PostgreSQL tables, keys, capacity rules, migration, and seed data | Phase 1 | Done |
-| 3. Access | Register, sign in, password hashing, role checks on the server | Phase 2 | 4 hours |
+| 3. Access | Register, sign in, password hashing, role checks on the server | Phase 2 | Done |
 | 4. Tours | Public palace introduction and tour list. Administrators can add and retire a tour | Phase 3 | 3 hours |
 | 5. Bookings | A visitor books a tour and date. Staff can see all bookings. A visitor sees only their own | Phase 4 | 4 hours |
 | 6. Visitors and payments | Staff record people on a booking and mark it unpaid or paid | Phase 5 | 3 hours |
@@ -66,4 +66,4 @@ Do these only after the essential path works. They are outside the agreed first 
 3. Implement the smallest version that satisfies those IDs.
 4. Run `npm test` and `npm run typecheck`.
 5. Click through the new path in the browser before calling the phase done.
-6. Ask for review, then merge. Do not start the next feature phase on a broken `master`.
+6. Ask for review, then merge. Do not start the next feature phase on a broken `main`.

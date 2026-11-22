@@ -50,7 +50,7 @@ async function withClient<T>(work: (client: PoolClient) => Promise<T>): Promise<
 test.before(async () => {
   await recreateTestDatabase()
   const applied = await migrate(testDatabaseUrl.toString())
-  assert.deepEqual(applied, ['001_init.sql'])
+  assert.deepEqual(applied, ['001_init.sql', '002_auth_roles.sql'])
   const appliedAgain = await migrate(testDatabaseUrl.toString())
   assert.deepEqual(appliedAgain, [])
   testPool = new Pool({ connectionString: testDatabaseUrl.toString() })
@@ -79,6 +79,7 @@ test('migration creates every application table', async () => {
       'receptions',
       'roles',
       'schema_migrations',
+      'sessions',
       'tour_packages',
       'tour_schedules',
       'tourists',
@@ -107,18 +108,15 @@ test('a foreign key rejects a booking for a missing tourist', async () => {
 test('a unique constraint rejects a duplicate user email', async () => {
   await withClient(async (client) => {
     await client.query(
-      `INSERT INTO roles (name, description) VALUES ('visitor', 'Visitor account')`,
-    )
-    await client.query(
       `INSERT INTO users (role_id, full_name, email, password_hash)
        SELECT id, 'First Visitor', 'visitor@abba-jifar.local', 'hash'
-       FROM roles WHERE name = 'visitor'`,
+       FROM roles WHERE name = 'tourist'`,
     )
     const error = await client
       .query(
         `INSERT INTO users (role_id, full_name, email, password_hash)
          SELECT id, 'Second Visitor', 'visitor@abba-jifar.local', 'hash'
-         FROM roles WHERE name = 'visitor'`,
+         FROM roles WHERE name = 'tourist'`,
       )
       .then(
         () => undefined,
@@ -132,13 +130,18 @@ test('a rolled-back transaction does not keep the inserted row', async () => {
   const client = await testPool.connect()
   try {
     await client.query('BEGIN')
-    await client.query(`INSERT INTO roles (name, description) VALUES ('staff', 'Staff account')`)
+    await client.query(
+      `INSERT INTO tour_packages (name, description, price_etb, duration_minutes)
+       VALUES ('Rollback Package', 'Temporary', 100, 60)`,
+    )
     await client.query('ROLLBACK')
   } finally {
     client.release()
   }
 
-  const result = await testPool.query<{ count: string }>('SELECT count(*)::text AS count FROM roles')
+  const result = await testPool.query<{ count: string }>(
+    `SELECT count(*)::text AS count FROM tour_packages WHERE name = 'Rollback Package'`,
+  )
   assert.equal(result.rows[0]?.count, '0')
 })
 
@@ -228,13 +231,10 @@ test('the same tourist cannot hold two active bookings for one schedule', async 
 
 test('only staff or an administrator can be recorded on a payment', async () => {
   await withClient(async (client) => {
-    await client.query(
-      `INSERT INTO roles (name, description) VALUES ('visitor', 'Visitor'), ('staff', 'Staff')`,
-    )
     const visitor = await client.query<{ id: string }>(
       `INSERT INTO users (role_id, full_name, email, password_hash)
        SELECT id, 'Visitor Person', 'pay-visitor@abba-jifar.local', 'hash'
-       FROM roles WHERE name = 'visitor'
+       FROM roles WHERE name = 'tourist'
        RETURNING id::text`,
     )
     const touristId = await insertTourist(client, 'Payment Visitor', Number(visitor.rows[0]?.id))
@@ -277,7 +277,7 @@ test('seed data can be inserted twice without duplicating rows', async () => {
     [env.seedAdminEmail],
   )
   assert.deepEqual(counts.rows[0], {
-    roles: '3',
+    roles: '4',
     admins: '1',
     packages: '3',
     schedules: '4',

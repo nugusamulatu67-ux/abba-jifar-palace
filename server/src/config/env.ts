@@ -51,11 +51,20 @@ function requiredEnv(name: string): string {
   return value
 }
 
+function requiredSecret(name: string): string {
+  const value = requiredEnv(name)
+  if (value.length < 32) {
+    throw new Error(`${name} must be at least 32 characters.`)
+  }
+  return value
+}
+
 export const env = {
   port: parsePort(process.env.PORT, 4000),
   nodeEnv: process.env.NODE_ENV ?? 'development',
   clientOrigin: process.env.CLIENT_ORIGIN ?? 'http://localhost:5173',
   databaseUrl: requiredEnv('DATABASE_URL'),
+  jwtSecret: requiredSecret('JWT_SECRET'),
   seedAdminEmail: (process.env.SEED_ADMIN_EMAIL ?? 'admin@abba-jifar.local').trim().toLowerCase(),
   seedAdminPassword: process.env.SEED_ADMIN_PASSWORD?.trim() ?? '',
 }

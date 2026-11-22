@@ -38,6 +38,7 @@ CLIENT_ORIGIN=http://localhost:5173
 DATABASE_URL=postgresql://abba_jifar:your-database-password@127.0.0.1:5433/abba_jifar
 SEED_ADMIN_EMAIL=admin@abba-jifar.local
 SEED_ADMIN_PASSWORD=your-admin-password
+JWT_SECRET=a-local-random-string-at-least-32-characters
 ```
 
 | Variable | Meaning |
@@ -48,8 +49,9 @@ SEED_ADMIN_PASSWORD=your-admin-password
 | `DATABASE_URL` | PostgreSQL user, password, host, port, and database name. |
 | `SEED_ADMIN_EMAIL` | Email of the development administrator. |
 | `SEED_ADMIN_PASSWORD` | Local password for that account. At least 8 characters. The database stores only a hash. |
+| `JWT_SECRET` | Secret used to sign session cookies. At least 32 characters. Not a password you reuse. |
 
-Do not put real passwords in source files or in `.env.example`. Do not commit `.env`. `JWT_SECRET` is reserved for the authentication phase and is ignored for now.
+Do not put real passwords in source files or in `.env.example`. Do not commit `.env`.
 
 ## Database setup
 
@@ -85,7 +87,7 @@ A successful health response looks like this:
 }
 ```
 
-The seed administrator can be checked later when sign-in exists. The email is `SEED_ADMIN_EMAIL`. The password is the value in `.env`, not a value stored in Git.
+The seed administrator signs in at http://localhost:5173/login. The email is `SEED_ADMIN_EMAIL`. The password is the value in `.env`, not a value stored in Git. Tourists register at http://localhost:5173/register. Guide and receptionist accounts are created by an administrator through `POST /api/admin/users`.
 
 ## Start the development environment
 
@@ -122,7 +124,7 @@ Run these from the repository root.
 | `npm run dev:server` | Starts only the API, with reload on save. |
 | `npm run dev:client` | Starts only the website. |
 | `npm run typecheck` | Type-checks the server and the client. |
-| `npm test` | Checks migrations, constraints, transactions, seed data, and `/api/health`. PostgreSQL must already be accepting connections. |
+| `npm test` | Checks migrations, constraints, transactions, seed data, authentication, and `/api/health`. PostgreSQL must already be accepting connections. |
 | `npm run lint` | Lints the client with oxlint. |
 | `npm run build` | Type-checks, then builds the client into `client/dist`. |
 
@@ -130,13 +132,14 @@ Run these from the repository root.
 
 | Path | Contents |
 | --- | --- |
-| `client/` | React frontend |
+| `client/` | React pages, including sign-in, registration, profile, and role areas |
 | `server/src/routes/` | URL routes |
 | `server/src/controllers/` | Request and response handlers |
 | `server/src/services/` | Business logic for a request |
 | `server/src/repositories/` | Table reads and writes |
+| `server/src/middleware/` | Session and role checks |
 | `server/src/validation/` | Checks on input values |
-| `server/src/security/` | Password hashing |
+| `server/src/security/` | Password hashing, session cookies, and login lockout |
 | `server/src/db/` | Migrations, seed data, transactions, and database errors |
 | `server/src/config/` | Environment variables and the connection pool |
 | `server/src/scripts/` | Commands for starting, migrating, seeding, and resetting the database |

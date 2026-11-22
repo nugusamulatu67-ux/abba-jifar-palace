@@ -1,6 +1,6 @@
 # Database design
 
-PostgreSQL is the application database. The tables below are created by `database/migrations/001_init.sql`. Development rows are inserted by `npm run db:seed`.
+PostgreSQL is the application database. The tables below are created by `database/migrations/001_init.sql` and `database/migrations/002_auth_roles.sql`. Development rows are inserted by `npm run db:seed`.
 
 Phase 1 had an empty SQLite file and no tables. That file is unused. Nothing was copied out of it because it contained no application records.
 
@@ -9,15 +9,16 @@ Phase 1 had an empty SQLite file and no tables. That file is unused. Nothing was
 | Earlier name | Table now | Reason |
 | --- | --- | --- |
 | User | `users` | Account: email, password hash, and one role |
-| Role | `roles` | The three agreed roles live in one lookup table: `visitor`, `staff`, `administrator` |
+| Role | `roles` | Four login roles: `administrator`, `tourist`, `tour_guide`, `receptionist` |
 | Tour | `tour_packages` | The bookable offering: name, description, price in ETB |
 | Visit date on a booking | `tour_schedules` | A package on a specific start time, with its own capacity |
-| Visitor account | `tourists` | The customer profile a booking belongs to. A registered visitor also has a `users` row |
+| Tourist account | `tourists` | The customer profile a booking belongs to. A registered tourist also has a `users` row |
 | Visitor at the desk | `visit_logs` | Each person who actually arrives. A guest does not need an account |
 | Payment | `payments` | One payment row for one booking |
-| Guide | `guides` | A person who can lead a tour. The row can point at a user account |
+| Guide | `guides` | A person who can lead a tour. A tour-guide account also has a `users` row |
 | Guide assignment | `guide_assignments` | Which guide is assigned to which schedule |
-| Reception | `receptions` | One front-desk arrival for a booking, recorded by a staff user. This is not a fourth login role |
+| Reception | `receptions` | One front-desk arrival for a booking, recorded by a receptionist or administrator |
+| Session | `sessions` | Server-side sign-in. Logout sets `revoked_at` |
 
 `visitor_feedback`, `announcements`, and `audit_logs` store reviews, public notices, and a history of important actions.
 
@@ -25,7 +26,7 @@ Phase 1 had an empty SQLite file and no tables. That file is unused. Nothing was
 
 | Table | Purpose | Important rules |
 | --- | --- | --- |
-| `roles` | Visitor, staff, and administrator | `name` is unique |
+| `roles` | Administrator, tourist, tour guide, and receptionist | `name` is unique |
 | `users` | Accounts | Unique lowercase email, password hash, status `active` or `inactive` |
 | `tourists` | Customer profile | Optional unique `user_id` for a registered visitor |
 | `tour_packages` | Tour listing | Unique name, price in whole ETB, status `active` or `inactive` |
@@ -34,7 +35,8 @@ Phase 1 had an empty SQLite file and no tables. That file is unused. Nothing was
 | `payments` | Money recorded for a booking | Exactly one row per booking. Status `unpaid` or `paid`. Method `cash` or `transfer` |
 | `guides` | Tour leaders | Optional link to a user. Phone is unique when present |
 | `guide_assignments` | Guide on a schedule | A guide is assigned to the same schedule only once |
-| `receptions` | Desk arrival for a booking | One arrival row per booking. `received_by` must be active staff or an administrator |
+| `receptions` | Desk arrival for a booking | One arrival row per booking. `received_by` must be an active receptionist or administrator |
+| `sessions` | Sign-in sessions | Belong to one user. Logout sets `revoked_at` |
 | `visit_logs` | People who arrived | Belong to one reception |
 | `visitor_feedback` | One review for a booking | Rating from 1 to 5 |
 | `announcements` | Palace notices | `draft` or `published` |
@@ -48,6 +50,7 @@ Phase 1 had an empty SQLite file and no tables. That file is unused. Nothing was
 ```mermaid
 erDiagram
   ROLES ||--o{ USERS : assigns
+  USERS ||--o{ SESSIONS : opens
   USERS |o--o| TOURISTS : "may profile"
   TOURISTS ||--o{ BOOKINGS : places
   TOUR_PACKAGES ||--o{ TOUR_SCHEDULES : offers
@@ -91,7 +94,7 @@ These rules are enforced by the database, so a later API cannot bypass them.
 2. **One active booking.** A tourist cannot have two `pending` or `confirmed` bookings for the same schedule. Cancelling the first booking allows a new one.
 3. **Open schedule.** A booking can be added only while the schedule status is `scheduled`.
 4. **Payment in the same transaction.** After a booking insert commits, a payment row for that booking must exist. The check waits until the end of the transaction, so the application can insert the booking and then the payment. `bookTour` in `server/src/repositories/booking.repository.ts` does both inside one transaction and locks the schedule first.
-5. **Who records a payment or arrival.** `payments.recorded_by` and `receptions.received_by`, when set, must be an active staff member or administrator.
+5. **Who records a payment or arrival.** `payments.recorded_by` and `receptions.received_by`, when set, must be an active receptionist or administrator.
 6. **No card data.** A payment stores an amount, a status, and `cash` or `transfer`. It does not store card numbers or a payment-provider secret.
 
 Two visitors booking the last seats at the same time are serialized by the schedule lock. One transaction commits. The other receives `booking_capacity_exceeded` and rolls back, including its payment insert.

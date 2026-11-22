@@ -14,9 +14,10 @@ Bookings, visitor records, and payment status are hard to run together when they
 
 ## Target users
 
-- **Visitors** who want to learn about the palace and book a tour.
-- **Staff** who receive visitors, look up bookings, and record payment status.
-- **Administrators** who manage tours, bookings, visitor records, payments, and user access.
+- **Tourists** who want to learn about the palace, create an account, and book a tour.
+- **Tour guides** who lead assigned tours and see the visitors on those tours.
+- **Receptionists** who verify bookings and check visitors in.
+- **Administrators** who manage tours, bookings, visitor records, payments, and staff accounts.
 
 ## Objectives
 
