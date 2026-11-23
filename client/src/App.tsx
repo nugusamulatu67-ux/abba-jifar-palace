@@ -4,7 +4,7 @@ import { Layout } from './components/Layout.tsx'
 import { ProtectedRoute } from './components/ProtectedRoute.tsx'
 import { AboutPage } from './pages/AboutPage.tsx'
 import { AnnouncementsPage } from './pages/AnnouncementsPage.tsx'
-import { AreaPage } from './pages/AreaPage.tsx'
+import { GuideAssignmentPage, GuideDashboardPage } from './pages/GuidePages.tsx'
 import { BookingPage } from './pages/BookingPage.tsx'
 import { BookingDetailPage, MyBookingsPage } from './pages/BookingPages.tsx'
 import { GalleryPage } from './pages/GalleryPage.tsx'
@@ -20,6 +20,7 @@ import { TourDetailPage } from './pages/TourDetailPage.tsx'
 import { ToursPage } from './pages/ToursPage.tsx'
 import { VisitPage } from './pages/VisitPage.tsx'
 import { AdminCheckInPage } from './pages/admin/CheckInAdminPage.tsx'
+import { AssignmentAdminPage, GuideDetailPage, GuideListPage } from './pages/admin/GuideAdminPages.tsx'
 import { AdminHubPage } from './pages/admin/AdminHubPage.tsx'
 import { AdminBookingDetailPage, AdminBookingListPage } from './pages/admin/BookingAdminPages.tsx'
 import { AdminPaymentDetailPage, AdminPaymentListPage } from './pages/admin/PaymentAdminPages.tsx'
@@ -202,17 +203,46 @@ export default function App() {
           }
         />
         <Route
+          path="/admin/guides"
+          element={
+            <ProtectedRoute>
+              <GuideListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/guides/:id"
+          element={
+            <ProtectedRoute>
+              <GuideDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/assignments"
+          element={
+            <ProtectedRoute>
+              <AssignmentAdminPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/guide"
           element={
             <ProtectedRoute>
-              <Narrow>
-                <AreaPage
-                  eyebrow="Staff"
-                  title="Assigned tours"
-                  intro="Guides will see their assigned tours and the visitors on those tours in a later phase."
-                  endpoint="/api/guide/access"
-                />
-              </Narrow>
+              <div className="wrap admin-page">
+                <GuideDashboardPage />
+              </div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/guide/assignments/:id"
+          element={
+            <ProtectedRoute>
+              <div className="wrap admin-page">
+                <GuideAssignmentPage />
+              </div>
             </ProtectedRoute>
           }
         />

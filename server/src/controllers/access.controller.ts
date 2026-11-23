@@ -11,7 +11,7 @@ export function getAdministratorAccess(_req: Request, res: Response): void {
 export function getGuideAccess(_req: Request, res: Response): void {
   res.json({
     area: 'guide',
-    message: 'Tour guide access is allowed. Assigned tours will appear in a later phase.',
+    message: 'Tour guide access is allowed.',
   })
 }
 

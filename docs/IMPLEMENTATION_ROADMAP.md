@@ -18,7 +18,7 @@ These phases are the product. Rough times assume one small team working in Curso
 | 6. Bookings | A visitor books a tour and date. An administrator can confirm or cancel. A visitor sees only their own. Payment stays unpaid | Phase 5 | Done on this branch |
 | 7. Payments and tickets | Staff record a palace payment. A paid booking receives one QR ticket. Visitors are not checked in yet | Phase 6 | Done on this branch |
 | 8. Reception check-in | A receptionist scans or looks up a paid ticket and records the arrival. Administrators can read the history | Phase 7 | Done on this branch |
-| 9. Test and handoff | Walk through every role, fix breakages, and update the README with anything that changed | Phase 8 | 2 hours |
+| 9. Guide assignment | An administrator assigns one guide to a departure. The guide sees visitors for that tour | Phase 8 | Done on this branch |
 
 ### Module order
 

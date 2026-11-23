@@ -71,6 +71,20 @@ export function AdminHubPage() {
               </Link>
             </article>
             <article className="info-card">
+              <h2>Guides</h2>
+              <p>See registered tour guides and how many departures they already have.</p>
+              <Link className="button" to="/admin/guides">
+                View guides
+              </Link>
+            </article>
+            <article className="info-card">
+              <h2>Assignments</h2>
+              <p>Give each upcoming departure one guide, without overlapping times.</p>
+              <Link className="button" to="/admin/assignments">
+                Assign guides
+              </Link>
+            </article>
+            <article className="info-card">
               <h2>Check-ins</h2>
               <p>See who arrived, which tour they joined, and who checked them in.</p>
               <Link className="button" to="/admin/check-ins">

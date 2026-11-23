@@ -232,3 +232,79 @@ export interface AttendanceSummary {
   tours: AttendanceTourTotal[]
 }
 
+export type AssignmentStatus = 'active' | 'replaced' | 'removed'
+
+export interface GuideAccount {
+  id: number
+  fullName: string
+  email: string
+  status: 'active' | 'inactive'
+  upcomingAssignments: number
+}
+
+export interface GuideAssignmentSummary {
+  id: number
+  scheduleId: number
+  packageId: number
+  packageName: string
+  description: string
+  includedActivities: string
+  startsAt: string
+  endsAt: string
+  scheduleStatus: ScheduleStatus
+  status: AssignmentStatus
+  guideUserId: number | null
+  guideName: string
+  assignedByName: string | null
+  assignedAt: string
+  confirmedVisitors: number
+  checkedInVisitors: number
+  expectedVisitors: number
+}
+
+export interface GuideVisitor {
+  reference: string
+  visitorName: string
+  partySize: number
+  bookingStatus: BookingStatus
+  checkedIn: boolean
+}
+
+export interface GuideAssignmentDetail extends GuideAssignmentSummary {
+  visitors: GuideVisitor[]
+}
+
+export interface GuideAccountDetail extends GuideAccount {
+  assignments: GuideAssignmentSummary[]
+}
+
+export interface DepartureAssignment {
+  scheduleId: number
+  packageId: number
+  packageName: string
+  startsAt: string
+  endsAt: string
+  scheduleStatus: ScheduleStatus
+  assignmentId: number | null
+  guideUserId: number | null
+  guideName: string | null
+  confirmedVisitors: number
+  checkedInVisitors: number
+  expectedVisitors: number
+}
+
+export interface DepartureAssignmentPage {
+  departures: DepartureAssignment[]
+  page: number
+  pageSize: number
+  total: number
+}
+
+export interface GuideDashboard {
+  guideName: string
+  upcomingCount: number
+  today: GuideAssignmentSummary[]
+  upcoming: GuideAssignmentSummary[]
+  completed: GuideAssignmentSummary[]
+}
+

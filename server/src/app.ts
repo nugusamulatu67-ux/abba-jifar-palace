@@ -6,6 +6,7 @@ import { authRouter } from './routes/auth.routes.ts'
 import { healthRouter } from './routes/health.routes.ts'
 import { bookingRouter } from './routes/booking.routes.ts'
 import { checkInRouter } from './routes/checkin.routes.ts'
+import { guideRouter } from './routes/guide.routes.ts'
 import { paymentRouter } from './routes/payment.routes.ts'
 import { tourRouter } from './routes/tour.routes.ts'
 
@@ -30,6 +31,7 @@ export function createApp() {
   app.use('/api', bookingRouter)
   app.use('/api', paymentRouter)
   app.use('/api', checkInRouter)
+  app.use('/api', guideRouter)
 
   app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
     if (error instanceof SyntaxError) {
