@@ -112,16 +112,4 @@ flowchart TB
   pool --> databaseServer
 ```
 
-Today the only HTTP conversation is the health check:
-
-1. The page requests `GET /api/health`.
-2. Vite proxies that request to Express.
-3. The health controller asks the health service for a status object.
-4. The service runs `SELECT 1` through the connection pool.
-5. Express returns JSON. The page prints the status, service name, database result, and time.
-
-## What exists after Phase 2
-
-- The Phase 1 placeholder page and `GET /api/health` still work, now against PostgreSQL.
-- The schema, migration, seed command, and booking integrity rules exist.
-- Sign-in, booking screens, payments, and the dashboard are not HTTP features yet.
+Today the API includes the health check, accounts, public tours, bookings, palace payments, and ticket verification. Each route follows the same path: the page requests `/api`, Vite proxies that request to Express, and a controller returns JSON.

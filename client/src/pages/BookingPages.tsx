@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
-import type { BookingView } from '../../../shared/src/index.ts'
+import type { BookingView, PaymentView } from '../../../shared/src/index.ts'
 import { api } from '../api.ts'
 import { usePageTitle } from '../components/usePageTitle.ts'
 import { formatPrice, formatWhen } from '../format.ts'
@@ -157,7 +157,7 @@ export function BookingDetailPage() {
               <dd>{booking.partySize}</dd>
             </div>
             <div>
-              <dt>Total due at the palace</dt>
+              <dt>Amount</dt>
               <dd>{formatPrice(booking.totalEtb)}</dd>
             </div>
             <div>
@@ -171,7 +171,7 @@ export function BookingDetailPage() {
             </button>
           )}
           {confirming && (
-            <div>
+            <div className="no-print">
               <p>Cancel this booking? The seats go back to the departure, and the reservation stays in your history.</p>
               <div className="actions">
                 <button className="button" type="button" disabled={pending} onClick={() => void cancelBooking()}>
@@ -185,6 +185,7 @@ export function BookingDetailPage() {
           )}
         </section>
       )}
+      {booking && <PaymentPanel reference={booking.reference} />}
     </>
   )
 }
@@ -194,7 +195,113 @@ function statusText(status: BookingView['status']): string {
     return 'Pending. The palace still needs to confirm it.'
   }
   if (status === 'confirmed') {
-    return 'Confirmed by the palace. Payment is still due at the palace.'
+    return 'Confirmed by the palace.'
   }
   return 'Cancelled. The seats are no longer held.'
+}
+
+function PaymentPanel({ reference }: { reference: string }) {
+  const [payment, setPayment] = useState<PaymentView | null>(null)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    const controller = new AbortController()
+    api<{ payment: PaymentView }>(`/api/payments/${reference}`, { signal: controller.signal })
+      .then((result) => {
+        if (!result.ok || !result.data) {
+          setError(result.error ?? 'Payment details could not be loaded.')
+          return
+        }
+        setPayment(result.data.payment)
+      })
+      .catch((caught: unknown) => {
+        if (caught instanceof DOMException && caught.name === 'AbortError') {
+          return
+        }
+        setError('Payment details could not be loaded.')
+      })
+    return () => controller.abort()
+  }, [reference])
+
+  return (
+    <section className="panel">
+      <h2>Payment and ticket</h2>
+      {error && (
+        <p className="status bad" role="alert">
+          {error}
+        </p>
+      )}
+      {!payment && !error && <p>Loading payment…</p>}
+      {payment?.paymentStatus === 'unpaid' && (
+        <p>Payment is due at the palace. This page cannot mark the booking as paid.</p>
+      )}
+      {payment?.paymentStatus === 'paid' && (
+        <dl className="facts">
+          <div>
+            <dt>Payment</dt>
+            <dd>Paid</dd>
+          </div>
+          <div>
+            <dt>Method</dt>
+            <dd>{methodLabel(payment.method)}</dd>
+          </div>
+          <div>
+            <dt>Paid on</dt>
+            <dd>{payment.paidAt ? formatWhen(payment.paidAt) : 'Recorded'}</dd>
+          </div>
+          <div>
+            <dt>Amount</dt>
+            <dd>{formatPrice(payment.amountEtb)}</dd>
+          </div>
+        </dl>
+      )}
+      {payment?.ticket?.status === 'valid' && payment.ticket.qrDataUrl && (
+        <article className="ticket-sheet">
+          <p className="eyebrow">Abba Jifar Palace</p>
+          <h3>Entry ticket</h3>
+          <dl className="facts">
+            <div>
+              <dt>Reference</dt>
+              <dd>{payment.reference}</dd>
+            </div>
+            <div>
+              <dt>Tour</dt>
+              <dd>{payment.packageName}</dd>
+            </div>
+            <div>
+              <dt>When</dt>
+              <dd>
+                {formatWhen(payment.startsAt)} – {formatWhen(payment.endsAt)}
+              </dd>
+            </div>
+            <div>
+              <dt>Visitors</dt>
+              <dd>{payment.partySize}</dd>
+            </div>
+            <div>
+              <dt>Ticket</dt>
+              <dd>Valid</dd>
+            </div>
+          </dl>
+          <img src={payment.ticket.qrDataUrl} alt="QR code for this palace ticket" />
+          <p className="no-print">
+            <button className="button secondary" type="button" onClick={() => window.print()}>
+              Print ticket
+            </button>
+          </p>
+        </article>
+      )}
+      {payment?.ticket?.status === 'void' && <p>This ticket is no longer valid.</p>}
+    </section>
+  )
+}
+
+function methodLabel(method: PaymentView['method']): string {
+  if (method === 'cash') {
+    return 'Cash'
+  }
+  if (method === 'transfer') {
+    return 'Bank transfer'
+  }
+  return 'Not recorded'
 }

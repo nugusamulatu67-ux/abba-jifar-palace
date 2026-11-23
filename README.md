@@ -2,7 +2,7 @@
 
 Tour booking and visitor management website for Abba Jifar Palace, a historical heritage site in Jimma, Ethiopia.
 
-Phase 1 set up the environment and a health check. Phase 2 adds the PostgreSQL schema, migrations, and seed data. Phase 3 adds sign-in, tourist registration, and role checks. Phase 4 adds the public palace pages. Phase 5 lets an administrator manage tour packages and schedules, and lets visitors browse the active ones. Phase 6 lets a signed-in tourist reserve seats and lets an administrator confirm or cancel those reservations. Payment is not collected on the website.
+Phase 1 set up the environment and a health check. Phase 2 adds the PostgreSQL schema, migrations, and seed data. Phase 3 adds sign-in, tourist registration, and role checks. Phase 4 adds the public palace pages. Phase 5 lets an administrator manage tour packages and schedules, and lets visitors browse the active ones. Phase 6 lets a signed-in tourist reserve seats and lets an administrator confirm or cancel those reservations. Phase 7 lets palace staff record a cash or bank-transfer payment and issues one QR ticket for a paid booking.
 
 ## Stack
 
@@ -39,6 +39,8 @@ The home page requests `/api/health` and shows the result. `status` and `databas
 | [docs/DATABASE_DESIGN.md](docs/DATABASE_DESIGN.md) | Entities and relationships |
 | [docs/DEVELOPMENT_GUIDE.md](docs/DEVELOPMENT_GUIDE.md) | Install, configuration, commands |
 | [docs/IMPLEMENTATION_ROADMAP.md](docs/IMPLEMENTATION_ROADMAP.md) | Phases for the 24-hour build |
+| [docs/BOOKING.md](docs/BOOKING.md) | Booking status and seat rules |
+| [docs/PAYMENTS.md](docs/PAYMENTS.md) | Palace payment recording and QR tickets |
 
 ## Layout
 
@@ -76,4 +78,6 @@ Phase 4: public pages for the palace, gallery, visit information, announcements,
 
 Phase 5: administrator management of tour packages and schedules, and public pages that show active packages, prices, durations, and upcoming seats.
 
-Phase 6: tourists reserve seats on an upcoming departure. Administrators confirm or cancel reservations. The amount is stored as unpaid. Payment collection is still a later phase.
+Phase 6: tourists reserve seats on an upcoming departure. Administrators confirm or cancel reservations. The amount is stored as unpaid.
+
+Phase 7: a receptionist or administrator records cash or a bank transfer at the palace. A paid booking receives one QR ticket. The website still does not take payment online, and reception check-in is a later phase.

@@ -11,12 +11,15 @@ import { GalleryPage } from './pages/GalleryPage.tsx'
 import { HomePage } from './pages/HomePage.tsx'
 import { LoginPage } from './pages/LoginPage.tsx'
 import { ProfilePage } from './pages/ProfilePage.tsx'
+import { ReceptionPaymentPage } from './pages/ReceptionPaymentPage.tsx'
 import { RegisterPage } from './pages/RegisterPage.tsx'
+import { TicketVerifyPage } from './pages/TicketVerifyPage.tsx'
 import { TourDetailPage } from './pages/TourDetailPage.tsx'
 import { ToursPage } from './pages/ToursPage.tsx'
 import { VisitPage } from './pages/VisitPage.tsx'
 import { AdminHubPage } from './pages/admin/AdminHubPage.tsx'
 import { AdminBookingDetailPage, AdminBookingListPage } from './pages/admin/BookingAdminPages.tsx'
+import { AdminPaymentDetailPage, AdminPaymentListPage } from './pages/admin/PaymentAdminPages.tsx'
 import { PackageFormPage, PackageListPage } from './pages/admin/PackagePages.tsx'
 import { ScheduleFormPage, ScheduleListPage } from './pages/admin/SchedulePages.tsx'
 
@@ -43,6 +46,14 @@ export default function App() {
                 <BookingPage />
               </Narrow>
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/tickets/verify/:token"
+          element={
+            <Narrow>
+              <TicketVerifyPage />
+            </Narrow>
           }
         />
         <Route
@@ -116,6 +127,22 @@ export default function App() {
           }
         />
         <Route
+          path="/admin/payments"
+          element={
+            <ProtectedRoute>
+              <AdminPaymentListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/payments/:reference"
+          element={
+            <ProtectedRoute>
+              <AdminPaymentDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/admin/tours"
           element={
             <ProtectedRoute>
@@ -183,12 +210,7 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Narrow>
-                <AreaPage
-                  eyebrow="Staff"
-                  title="Reception"
-                  intro="Reception will use this area to verify bookings and check visitors in."
-                  endpoint="/api/reception/access"
-                />
+                <ReceptionPaymentPage />
               </Narrow>
             </ProtectedRoute>
           }

@@ -63,6 +63,13 @@ export function AdminHubPage() {
                 Manage bookings
               </Link>
             </article>
+            <article className="info-card">
+              <h2>Payments</h2>
+              <p>Record cash or a bank transfer received at the palace.</p>
+              <Link className="button" to="/admin/payments">
+                Manage payments
+              </Link>
+            </article>
           </div>
         </>
       )}

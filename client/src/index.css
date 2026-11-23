@@ -732,3 +732,35 @@ code {
     transform: translateY(-2px);
   }
 }
+
+.ticket-sheet {
+  max-width: 28rem;
+  margin-top: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.ticket-sheet img {
+  width: 220px;
+  height: 220px;
+}
+
+@media print {
+  .site-header,
+  .site-footer,
+  .signed-in,
+  .skip-link,
+  .no-print {
+    display: none !important;
+  }
+
+  body,
+  .site {
+    background: #fff;
+  }
+
+  .ticket-sheet {
+    border: 1px solid #241c14;
+  }
+}

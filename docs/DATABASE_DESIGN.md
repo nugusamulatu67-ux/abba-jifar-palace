@@ -32,7 +32,8 @@ Phase 1 had an empty SQLite file and no tables. That file is unused. Nothing was
 | `tour_packages` | Tour listing | Unique name, whole-ETB price from 0 to 1,000,000, duration from 1 to 1,440 minutes, optional group size, status `active`, `inactive`, or `archived` |
 | `tour_schedules` | One departure | Unique package + start time, `max_capacity` greater than 0, end time after start |
 | `bookings` | A tourist reserving seats | Party size greater than 0. Unique reference `AJ-` plus digits. Status `pending`, `confirmed`, or `cancelled`. A cancelled row records `cancelled_at`. See [BOOKING.md](BOOKING.md) |
-| `payments` | Money recorded for a booking | Exactly one row per booking. Status `unpaid` or `paid`. Method `cash` or `transfer` |
+| `payments` | Money recorded for a booking | Exactly one row per booking. Status `unpaid` or `paid`. Method `cash` or `transfer`. See [PAYMENTS.md](PAYMENTS.md) |
+| `tickets` | One entry ticket for a paid booking | Unique token. Status `valid` or `void`. A valid ticket requires a paid booking that is not cancelled |
 | `guides` | Tour leaders | Optional link to a user. Phone is unique when present |
 | `guide_assignments` | Guide on a schedule | A guide is assigned to the same schedule only once |
 | `receptions` | Desk arrival for a booking | One arrival row per booking. `received_by` must be an active receptionist or administrator |

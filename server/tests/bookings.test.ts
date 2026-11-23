@@ -41,13 +41,14 @@ describe('tourist bookings', { concurrency: 1 }, () => {
     await new Promise<void>((resolve, reject) => server.close((error) => (error ? reject(error) : resolve())))
     await pool.query(
       `DELETE FROM audit_logs
-       WHERE user_id IN (SELECT id FROM users WHERE email LIKE 'phase6-%@abba-jifar.local')
+       WHERE user_id IN (SELECT id FROM users WHERE email LIKE $1)
           OR entity_id IN (
             SELECT reference FROM bookings
             JOIN tour_schedules ON tour_schedules.id = bookings.tour_schedule_id
             JOIN tour_packages ON tour_packages.id = tour_schedules.tour_package_id
             WHERE tour_packages.name LIKE 'Phase6 %'
           )`,
+      [`phase6-%${stamp}%@abba-jifar.local`],
     )
     await pool.query(
       `DELETE FROM payments
@@ -72,9 +73,10 @@ describe('tourist bookings', { concurrency: 1 }, () => {
     )
     await pool.query(`DELETE FROM tour_packages WHERE name LIKE 'Phase6 %'`)
     await pool.query(
-      `DELETE FROM tourists WHERE user_id IN (SELECT id FROM users WHERE email LIKE 'phase6-%@abba-jifar.local')`,
+      `DELETE FROM tourists WHERE user_id IN (SELECT id FROM users WHERE email LIKE $1)`,
+      [`phase6-%${stamp}%@abba-jifar.local`],
     )
-    await pool.query(`DELETE FROM users WHERE email LIKE 'phase6-%@abba-jifar.local'`)
+    await pool.query(`DELETE FROM users WHERE email LIKE $1`, [`phase6-%${stamp}%@abba-jifar.local`])
   })
 
   test('a tourist can book, see only their booking, and the server calculates the amount', async () => {

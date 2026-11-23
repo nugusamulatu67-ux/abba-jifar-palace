@@ -49,7 +49,7 @@ export function AdminBookingListPage() {
     <div className="wrap admin-page">
       <p className="eyebrow">Administration</p>
       <h1>Bookings</h1>
-      <p className="lede">Reservations stay unpaid until the palace records a payment in a later phase.</p>
+      <p className="lede">Reservations stay unpaid until reception or an administrator records the palace payment.</p>
       {error && (
         <p className="status bad" role="alert">
           {error}

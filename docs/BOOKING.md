@@ -2,7 +2,7 @@
 
 A tourist booking reserves seats on one scheduled departure. The price is the package price times the number of visitors. The server calculates that total. The browser cannot set the price or the tourist.
 
-Payment is not collected in this phase. Creating a booking also stores the unpaid payment row the database already requires. That row stays `unpaid`. Nothing in this phase marks a booking paid.
+Payment is not collected in this phase. Creating a booking also stores the unpaid payment row the database already requires. That row stays `unpaid` until a receptionist or administrator records it. See [PAYMENTS.md](PAYMENTS.md).
 
 ## Status
 

@@ -119,3 +119,67 @@ export interface BookingView {
   canConfirm: boolean
 }
 
+export type PaymentStatus = 'unpaid' | 'paid'
+
+export type PaymentMethod = 'cash' | 'transfer'
+
+export type TicketStatus = 'valid' | 'void'
+
+export interface TicketView {
+  status: TicketStatus
+  issuedAt: string
+  qrDataUrl: string | null
+}
+
+export interface PaymentView {
+  reference: string
+  packageName: string
+  startsAt: string
+  endsAt: string
+  partySize: number
+  bookingStatus: BookingStatus
+  amountEtb: number
+  paymentStatus: PaymentStatus
+  method: PaymentMethod | null
+  paidAt: string | null
+  ticket: TicketView | null
+}
+
+export interface PaymentListItem {
+  reference: string
+  touristName: string
+  packageName: string
+  startsAt: string
+  partySize: number
+  bookingStatus: BookingStatus
+  amountEtb: number
+  paymentStatus: PaymentStatus
+  method: PaymentMethod | null
+  paidAt: string | null
+}
+
+export interface PaymentAuditEntry {
+  action: string
+  actorName: string | null
+  createdAt: string
+  method: string | null
+  amountEtb: number | null
+}
+
+export interface StaffPaymentView extends PaymentView {
+  touristName: string
+  recordedByName: string | null
+  audits: PaymentAuditEntry[]
+}
+
+export interface PublicTicketCheck {
+  palace: 'Abba Jifar Palace'
+  valid: boolean
+  ticketStatus: TicketStatus
+  reference: string
+  packageName: string
+  startsAt: string
+  endsAt: string
+  partySize: number
+}
+

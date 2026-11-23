@@ -55,6 +55,7 @@ test.before(async () => {
     '002_auth_roles.sql',
     '003_tour_package_details.sql',
     '004_booking_reference.sql',
+    '005_tickets.sql',
   ])
   const appliedAgain = await migrate(testDatabaseUrl.toString())
   assert.deepEqual(appliedAgain, [])
@@ -85,6 +86,7 @@ test('migration creates every application table', async () => {
       'roles',
       'schema_migrations',
       'sessions',
+      'tickets',
       'tour_packages',
       'tour_schedules',
       'tourists',
