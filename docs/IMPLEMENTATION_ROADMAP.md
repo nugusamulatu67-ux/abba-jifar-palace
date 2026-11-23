@@ -13,7 +13,7 @@ These phases are the product. Rough times assume one small team working in Curso
 | 1. Foundation | Tooling, folders, docs, health check, database connection | — | Done |
 | 2. Schema | PostgreSQL tables, keys, capacity rules, migration, and seed data | Phase 1 | Done |
 | 3. Access | Register, sign in, password hashing, role checks on the server | Phase 2 | Done |
-| 4. Tours | Public palace introduction and tour list. Administrators can add and retire a tour | Phase 3 | 3 hours |
+| 4. Public site | Palace introduction, gallery, visit information, announcements, and tour themes. Administrator tour editing comes later | Phase 3 | Done on this branch |
 | 5. Bookings | A visitor books a tour and date. Staff can see all bookings. A visitor sees only their own | Phase 4 | 4 hours |
 | 6. Visitors and payments | Staff record people on a booking and mark it unpaid or paid | Phase 5 | 3 hours |
 | 7. Dashboard | Staff and administrator screens that use the records from phases 5 and 6 | Phase 6 | 3 hours |

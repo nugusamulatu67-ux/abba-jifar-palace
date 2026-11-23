@@ -17,6 +17,12 @@ export function ProfilePage() {
         }
         setUser(result.data.user)
       })
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          return
+        }
+        setError('Could not load your profile.')
+      })
       .finally(() => setLoading(false))
 
     return () => controller.abort()
@@ -33,7 +39,7 @@ export function ProfilePage() {
         </p>
       )}
       {user && (
-        <section>
+        <section className="card">
           <h2>{user.fullName}</h2>
           <dl>
             <div>

@@ -26,6 +26,12 @@ export function AreaPage({
         }
         setMessage(result.data.message)
       })
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          return
+        }
+        setError('This area is not available.')
+      })
       .finally(() => setLoading(false))
 
     return () => controller.abort()
@@ -36,7 +42,7 @@ export function AreaPage({
       <p className="eyebrow">{eyebrow}</p>
       <h1>{title}</h1>
       <p className="lede">{intro}</p>
-      <section aria-live="polite">
+      <section className="card" aria-live="polite">
         <h2>Access check</h2>
         {loading && <p>Checking access…</p>}
         {error && (

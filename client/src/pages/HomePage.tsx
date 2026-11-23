@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { HealthResponse } from '../../../shared/src/index.ts'
-import { useAuth } from '../auth/useAuth.ts'
+import { PhotoFrame } from '../components/PhotoFrame.tsx'
+import { usePageTitle } from '../components/usePageTitle.ts'
+import { VerifyNote } from '../components/VerifyNote.tsx'
+import { gallerySlots, tourThemes, verifiedFacts } from '../content/publicSite.ts'
 
 type LoadState =
   | { kind: 'loading' }
@@ -9,7 +12,7 @@ type LoadState =
   | { kind: 'error'; message: string }
 
 export function HomePage() {
-  const { user } = useAuth()
+  usePageTitle('Home')
   const [state, setState] = useState<LoadState>({ kind: 'loading' })
 
   useEffect(() => {
@@ -36,63 +39,138 @@ export function HomePage() {
 
   return (
     <>
-      <p className="eyebrow">Heritage site · Jimma</p>
-      <h1>Tour booking and visitor management</h1>
-      <p className="lede">
-        Plan a visit to Abba Jifar Palace. Tourists can create an account and sign in. Staff areas
-        stay closed until an administrator creates those accounts.
-      </p>
-      <p className="actions">
-        {user ? (
-          <Link className="button" to="/account">
-            View your profile
-          </Link>
-        ) : (
-          <>
-            <Link className="button" to="/register">
-              Create a tourist account
-            </Link>
-            <Link className="button secondary" to="/login">
-              Sign in
-            </Link>
-          </>
-        )}
-      </p>
-
-      <section aria-live="polite">
-        <h2>API health</h2>
-        {state.kind === 'loading' && <p>Checking the API…</p>}
-        {state.kind === 'error' && (
-          <p className="status bad" role="alert">
-            {state.message}. Start the API with <code>npm run dev:server</code>, then refresh.
+      <section className="hero">
+        <div className="wrap hero-copy">
+          <p className="eyebrow light">Jimma, Ethiopia</p>
+          <h1>Abba Jifar Palace</h1>
+          <p className="lede">
+            A historical heritage site. This website introduces the palace and the tours visitors will be able to book.
           </p>
-        )}
-        {state.kind === 'ready' && (
-          <dl>
-            <div>
-              <dt>Status</dt>
-              <dd className={state.health.status === 'ok' ? 'status ok' : 'status bad'}>{state.health.status}</dd>
-            </div>
-            <div>
-              <dt>Service</dt>
-              <dd>{state.health.service}</dd>
-            </div>
-            <div>
-              <dt>Database</dt>
-              <dd className={state.health.database.status === 'connected' ? 'status ok' : 'status bad'}>
-                {state.health.database.status}
-              </dd>
-            </div>
-            <div>
-              <dt>Detail</dt>
-              <dd>{state.health.database.message}</dd>
-            </div>
-            <div>
-              <dt>Checked at</dt>
-              <dd>{state.health.time}</dd>
-            </div>
+          <p className="actions">
+            <Link className="button light" to="/tours">
+              Explore tours
+            </Link>
+            <Link className="button ghost" to="/visit">
+              Plan a visit
+            </Link>
+          </p>
+        </div>
+      </section>
+
+      <section className="band">
+        <div className="wrap split">
+          <div>
+            <p className="eyebrow">Introduction</p>
+            <h2>A palace website for visitors</h2>
+            <p>
+              The project documents describe one place: Abba Jifar Palace, a historical heritage site in Jimma, Ethiopia.
+              People will use this site to learn about the palace, create a tourist account, and later reserve a tour.
+            </p>
+          </div>
+          <dl className="fact-list">
+            {verifiedFacts.map((fact) => (
+              <div key={fact.label}>
+                <dt>{fact.label}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))}
           </dl>
-        )}
+        </div>
+      </section>
+
+      <section className="band band-paper">
+        <div className="wrap">
+          <p className="eyebrow">History</p>
+          <h2>What can be said today</h2>
+          <p className="section-intro">
+            A short historical introduction belongs here. The documents do not yet include a verified history, so the
+            passage below is held until it can be checked.
+          </p>
+          <VerifyNote purpose="A verified historical introduction is not in the project documents." />
+        </div>
+      </section>
+
+      <section className="band">
+        <div className="wrap">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Photographs</p>
+              <h2>The palace in pictures</h2>
+            </div>
+            <Link to="/gallery">Open the gallery</Link>
+          </div>
+          <div className="frame-grid">
+            {gallerySlots.slice(0, 3).map((item) => (
+              <PhotoFrame key={item.id} item={item} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="band band-paper">
+        <div className="wrap">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Tours</p>
+              <h2>Ways to see the palace</h2>
+            </div>
+            <Link to="/tours">View tour themes</Link>
+          </div>
+          <p className="section-intro">
+            These descriptions are already stored for development. Booking, dates, and prices are not part of this page.
+          </p>
+          <div className="card-grid">
+            {tourThemes.map((tour) => (
+              <article key={tour.name} className="info-card">
+                <h3>{tour.name}</h3>
+                <p>{tour.description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="band">
+        <div className="wrap">
+          <p className="eyebrow">Significance</p>
+          <h2>Why the visit matters</h2>
+          <div className="card-grid">
+            <article className="info-card">
+              <h3>A heritage site</h3>
+              <p>The project identifies Abba Jifar Palace as a historical heritage site in Jimma, Ethiopia.</p>
+            </article>
+            <article className="info-card">
+              <h3>Tours for visitors</h3>
+              <p>Guided visits are planned around the palace, with a slower museum and garden walk among the themes.</p>
+            </article>
+            <article className="info-card">
+              <h3>Still to be written</h3>
+              <VerifyNote purpose="Cultural significance beyond the heritage-site description is not documented here yet." />
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section className="band band-tight" aria-live="polite">
+        <div className="wrap status-row">
+          <h2>Site status</h2>
+          {state.kind === 'loading' && <p>Checking the API…</p>}
+          {state.kind === 'error' && (
+            <p className="status bad" role="alert">
+              {state.message}
+            </p>
+          )}
+          {state.kind === 'ready' && (
+            <p>
+              <span className={state.health.status === 'ok' ? 'status ok' : 'status bad'}>{state.health.status}</span>
+              {' · '}
+              Database{' '}
+              <span className={state.health.database.status === 'connected' ? 'status ok' : 'status bad'}>
+                {state.health.database.status}
+              </span>
+            </p>
+          )}
+        </div>
       </section>
     </>
   )
