@@ -56,6 +56,13 @@ export function AdminHubPage() {
                 Manage schedules
               </Link>
             </article>
+            <article className="info-card">
+              <h2>Bookings</h2>
+              <p>Review reservations, confirm a pending booking, or cancel one.</p>
+              <Link className="button" to="/admin/bookings">
+                Manage bookings
+              </Link>
+            </article>
           </div>
         </>
       )}

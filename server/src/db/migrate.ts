@@ -13,6 +13,7 @@ export async function migrate(connectionString: string): Promise<string[]> {
   const applied: string[] = []
 
   try {
+    await client.query('SELECT pg_advisory_lock(7042006)')
     await client.query(`
       CREATE TABLE IF NOT EXISTS schema_migrations (
         version text PRIMARY KEY,
@@ -44,6 +45,7 @@ export async function migrate(connectionString: string): Promise<string[]> {
       }
     }
   } finally {
+    await client.query('SELECT pg_advisory_unlock(7042006)').catch(() => undefined)
     await client.end()
   }
 

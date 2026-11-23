@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { ROLE_LABELS, type PublicUser } from '../../../shared/src/index.ts'
 import { api } from '../api.ts'
 
@@ -55,6 +56,11 @@ export function ProfilePage() {
               <dd className={user.status === 'active' ? 'status ok' : 'status bad'}>{user.status}</dd>
             </div>
           </dl>
+          {user.role === 'tourist' && (
+            <p>
+              <Link to="/account/bookings">My bookings</Link>
+            </p>
+          )}
         </section>
       )}
     </>

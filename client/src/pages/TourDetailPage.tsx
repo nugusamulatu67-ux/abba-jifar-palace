@@ -116,8 +116,17 @@ export function TourDetailPage() {
                 </div>
               )}
               {ready && !user && (
-                <p className="section-intro">
-                  New visitor? <Link to="/register">Create a tourist account</Link>. Booking itself opens in the next phase.
+                <p>
+                  New visitor?{' '}
+                  <Link
+                    to="/register"
+                    state={{
+                      from: `/tours/${tour.id}/book?schedule=${tour.schedules.find((item) => item.bookable)?.id ?? ''}`,
+                    }}
+                  >
+                    Create a tourist account
+                  </Link>
+                  . Use Sign in to book on a departure so you return to that reservation. Payment is taken at the palace.
                 </p>
               )}
             </>

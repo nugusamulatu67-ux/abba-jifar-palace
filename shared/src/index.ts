@@ -101,3 +101,21 @@ export interface AdminSchedule {
   updatedAt: string
 }
 
+export type BookingStatus = 'pending' | 'confirmed' | 'cancelled'
+
+export interface BookingView {
+  reference: string
+  scheduleId: number
+  packageId: number
+  packageName: string
+  startsAt: string
+  endsAt: string
+  partySize: number
+  totalEtb: number
+  status: BookingStatus
+  createdAt: string
+  cancelledAt: string | null
+  canCancel: boolean
+  canConfirm: boolean
+}
+

@@ -31,7 +31,7 @@ Phase 1 had an empty SQLite file and no tables. That file is unused. Nothing was
 | `tourists` | Customer profile | Optional unique `user_id` for a registered visitor |
 | `tour_packages` | Tour listing | Unique name, whole-ETB price from 0 to 1,000,000, duration from 1 to 1,440 minutes, optional group size, status `active`, `inactive`, or `archived` |
 | `tour_schedules` | One departure | Unique package + start time, `max_capacity` greater than 0, end time after start |
-| `bookings` | A tourist reserving seats | Party size greater than 0. Status `pending`, `confirmed`, or `cancelled` |
+| `bookings` | A tourist reserving seats | Party size greater than 0. Unique reference `AJ-` plus digits. Status `pending`, `confirmed`, or `cancelled`. A cancelled row records `cancelled_at`. See [BOOKING.md](BOOKING.md) |
 | `payments` | Money recorded for a booking | Exactly one row per booking. Status `unpaid` or `paid`. Method `cash` or `transfer` |
 | `guides` | Tour leaders | Optional link to a user. Phone is unique when present |
 | `guide_assignments` | Guide on a schedule | A guide is assigned to the same schedule only once |

@@ -64,6 +64,7 @@ export function Layout({ children }: { children: ReactNode }) {
             {ready && user?.role === 'administrator' && <NavLink to="/admin">Administration</NavLink>}
             {ready && user?.role === 'tour_guide' && <NavLink to="/guide">Assigned tours</NavLink>}
             {ready && user?.role === 'receptionist' && <NavLink to="/reception">Reception</NavLink>}
+            {ready && user?.role === 'tourist' && <NavLink to="/account/bookings">My bookings</NavLink>}
             {ready && user && <NavLink to="/account">Profile</NavLink>}
             {ready && !user && <NavLink to="/login">Sign in</NavLink>}
             {ready && !user && (

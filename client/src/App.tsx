@@ -5,7 +5,8 @@ import { ProtectedRoute } from './components/ProtectedRoute.tsx'
 import { AboutPage } from './pages/AboutPage.tsx'
 import { AnnouncementsPage } from './pages/AnnouncementsPage.tsx'
 import { AreaPage } from './pages/AreaPage.tsx'
-import { BookingHoldPage } from './pages/BookingHoldPage.tsx'
+import { BookingPage } from './pages/BookingPage.tsx'
+import { BookingDetailPage, MyBookingsPage } from './pages/BookingPages.tsx'
 import { GalleryPage } from './pages/GalleryPage.tsx'
 import { HomePage } from './pages/HomePage.tsx'
 import { LoginPage } from './pages/LoginPage.tsx'
@@ -15,6 +16,7 @@ import { TourDetailPage } from './pages/TourDetailPage.tsx'
 import { ToursPage } from './pages/ToursPage.tsx'
 import { VisitPage } from './pages/VisitPage.tsx'
 import { AdminHubPage } from './pages/admin/AdminHubPage.tsx'
+import { AdminBookingDetailPage, AdminBookingListPage } from './pages/admin/BookingAdminPages.tsx'
 import { PackageFormPage, PackageListPage } from './pages/admin/PackagePages.tsx'
 import { ScheduleFormPage, ScheduleListPage } from './pages/admin/SchedulePages.tsx'
 
@@ -38,7 +40,7 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Narrow>
-                <BookingHoldPage />
+                <BookingPage />
               </Narrow>
             </ProtectedRoute>
           }
@@ -70,10 +72,46 @@ export default function App() {
           }
         />
         <Route
+          path="/account/bookings"
+          element={
+            <ProtectedRoute>
+              <div className="wrap admin-page">
+                <MyBookingsPage />
+              </div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/account/bookings/:reference"
+          element={
+            <ProtectedRoute>
+              <div className="wrap admin-page">
+                <BookingDetailPage />
+              </div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/admin"
           element={
             <ProtectedRoute>
               <AdminHubPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/bookings"
+          element={
+            <ProtectedRoute>
+              <AdminBookingListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/bookings/:reference"
+          element={
+            <ProtectedRoute>
+              <AdminBookingDetailPage />
             </ProtectedRoute>
           }
         />

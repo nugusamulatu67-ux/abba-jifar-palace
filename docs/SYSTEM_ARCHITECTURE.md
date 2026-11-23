@@ -51,7 +51,7 @@ Shared response shapes live in `shared/src/` so the client and the server name t
 
 The public route `GET /api/health` returns the service name, the time, and whether PostgreSQL accepted `SELECT 1`. Account routes live under `/api/auth`. Role checks live under `/api/admin`, `/api/guide`, and `/api/reception`. Public tour reading is `GET /api/tours` and `GET /api/schedules`. Package and schedule changes use the administrator routes under `/api/admin/tours` and `/api/admin/schedules`.
 
-`bookTour` is a repository function for a later booking route. It is not exposed as an HTTP endpoint yet. It locks the schedule, inserts the booking, and inserts the payment in one transaction. The database triggers described in [DATABASE_DESIGN.md](DATABASE_DESIGN.md) still apply if a future route writes SQL directly.
+`bookTour` inserts a booking and its unpaid payment in one transaction after locking the schedule. Tourist and administrator booking routes use that function. The status and cancellation rules are in [BOOKING.md](BOOKING.md).
 
 ## Database
 

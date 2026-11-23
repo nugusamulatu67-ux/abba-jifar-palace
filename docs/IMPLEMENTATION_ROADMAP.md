@@ -15,7 +15,7 @@ These phases are the product. Rough times assume one small team working in Curso
 | 3. Access | Register, sign in, password hashing, role checks on the server | Phase 2 | Done |
 | 4. Public site | Palace introduction, gallery, visit information, announcements, and tour themes | Phase 3 | Done |
 | 5. Tour packages and schedules | Administrators manage packages and departures. Visitors browse active packages, prices, and remaining seats. Booking is not open yet | Phase 4 | Done on this branch |
-| 6. Bookings | A visitor books a tour and date. Staff can see all bookings. A visitor sees only their own | Phase 5 | 4 hours |
+| 6. Bookings | A visitor books a tour and date. An administrator can confirm or cancel. A visitor sees only their own. Payment stays unpaid | Phase 5 | Done on this branch |
 | 7. Visitors and payments | Staff record people on a booking and mark it unpaid or paid | Phase 6 | 3 hours |
 | 8. Dashboard | Staff and administrator screens that use the records from phases 6 and 7 | Phase 7 | 3 hours |
 | 9. Test and handoff | Walk through every role, fix breakages, and update the README with anything that changed | Phase 8 | 2 hours |

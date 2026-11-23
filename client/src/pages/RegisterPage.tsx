@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import type { PublicUser } from '../../../shared/src/index.ts'
 import { api } from '../api.ts'
 import { useAuth } from '../auth/useAuth.ts'
@@ -8,6 +8,8 @@ import { useAuth } from '../auth/useAuth.ts'
 export function RegisterPage() {
   const { setUser } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const requested = (location.state as { from?: string } | null)?.from
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -43,7 +45,7 @@ export function RegisterPage() {
       return
     }
     setUser(result.data.user)
-    navigate('/account')
+    navigate(requested && requested.startsWith('/') ? requested : '/account')
   }
 
   return (

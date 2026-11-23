@@ -72,7 +72,7 @@ export function LoginPage() {
           {pending ? 'Signing in…' : 'Sign in'}
         </button>
         <p className="form-note">
-          New visitor? <Link to="/register">Create a tourist account</Link>
+          New visitor? <Link to="/register" state={requested ? { from: requested } : undefined}>Create a tourist account</Link>
         </p>
       </form>
     </>
