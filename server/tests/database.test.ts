@@ -56,6 +56,7 @@ test.before(async () => {
     '003_tour_package_details.sql',
     '004_booking_reference.sql',
     '005_tickets.sql',
+    '006_reception_checkin.sql',
   ])
   const appliedAgain = await migrate(testDatabaseUrl.toString())
   assert.deepEqual(appliedAgain, [])

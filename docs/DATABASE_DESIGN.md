@@ -36,7 +36,7 @@ Phase 1 had an empty SQLite file and no tables. That file is unused. Nothing was
 | `tickets` | One entry ticket for a paid booking | Unique token. Status `valid` or `void`. A valid ticket requires a paid booking that is not cancelled |
 | `guides` | Tour leaders | Optional link to a user. Phone is unique when present |
 | `guide_assignments` | Guide on a schedule | A guide is assigned to the same schedule only once |
-| `receptions` | Desk arrival for a booking | One arrival row per booking. `received_by` must be an active receptionist or administrator |
+| `receptions` | Desk arrival for a booking | One arrival row per booking and one per ticket. `received_by` must be an active receptionist or administrator. Check-in is allowed only on the scheduled visit date. See [CHECKIN.md](CHECKIN.md) |
 | `sessions` | Sign-in sessions | Belong to one user. Logout sets `revoked_at` |
 | `visit_logs` | People who arrived | Belong to one reception |
 | `visitor_feedback` | One review for a booking | Rating from 1 to 5 |

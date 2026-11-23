@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import type { PaymentMethod, StaffPaymentView } from '../../../shared/src/index.ts'
 import { api } from '../api.ts'
 import { usePageTitle } from '../components/usePageTitle.ts'
@@ -84,8 +85,11 @@ export function ReceptionPaymentPage() {
     <>
       <p className="eyebrow">Reception</p>
       <h1>Record a payment</h1>
+      <p>
+        <Link to="/reception">Reception desk</Link>
+      </p>
       <p className="lede">
-        Search a booking reference and record cash or a bank transfer received at the palace. Visitor check-in is a later phase.
+        Search a booking reference and record cash or a bank transfer received at the palace. Check-in stays on the reception desk.
       </p>
       <form className="filters" onSubmit={(event) => void search(event)}>
         <label>

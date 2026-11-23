@@ -11,12 +11,15 @@ import { GalleryPage } from './pages/GalleryPage.tsx'
 import { HomePage } from './pages/HomePage.tsx'
 import { LoginPage } from './pages/LoginPage.tsx'
 import { ProfilePage } from './pages/ProfilePage.tsx'
+import { CheckInPage } from './pages/CheckInPage.tsx'
+import { ReceptionHistoryPage, ReceptionHomePage } from './pages/ReceptionPages.tsx'
 import { ReceptionPaymentPage } from './pages/ReceptionPaymentPage.tsx'
 import { RegisterPage } from './pages/RegisterPage.tsx'
 import { TicketVerifyPage } from './pages/TicketVerifyPage.tsx'
 import { TourDetailPage } from './pages/TourDetailPage.tsx'
 import { ToursPage } from './pages/ToursPage.tsx'
 import { VisitPage } from './pages/VisitPage.tsx'
+import { AdminCheckInPage } from './pages/admin/CheckInAdminPage.tsx'
 import { AdminHubPage } from './pages/admin/AdminHubPage.tsx'
 import { AdminBookingDetailPage, AdminBookingListPage } from './pages/admin/BookingAdminPages.tsx'
 import { AdminPaymentDetailPage, AdminPaymentListPage } from './pages/admin/PaymentAdminPages.tsx'
@@ -143,6 +146,14 @@ export default function App() {
           }
         />
         <Route
+          path="/admin/check-ins"
+          element={
+            <ProtectedRoute>
+              <AdminCheckInPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/admin/tours"
           element={
             <ProtectedRoute>
@@ -207,6 +218,34 @@ export default function App() {
         />
         <Route
           path="/reception"
+          element={
+            <ProtectedRoute>
+              <div className="wrap admin-page">
+                <ReceptionHomePage />
+              </div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/reception/check-in"
+          element={
+            <ProtectedRoute>
+              <Narrow>
+                <CheckInPage />
+              </Narrow>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/reception/check-ins"
+          element={
+            <ProtectedRoute>
+              <ReceptionHistoryPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/reception/payments"
           element={
             <ProtectedRoute>
               <Narrow>

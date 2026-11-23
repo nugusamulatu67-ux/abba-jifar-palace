@@ -183,3 +183,52 @@ export interface PublicTicketCheck {
   partySize: number
 }
 
+export interface CheckInPreview {
+  palace: 'Abba Jifar Palace'
+  reference: string
+  touristName: string
+  packageId: number
+  packageName: string
+  startsAt: string
+  endsAt: string
+  partySize: number
+  paymentStatus: PaymentStatus
+  ticketStatus: TicketStatus | 'missing'
+  bookingStatus: BookingStatus
+  eligible: boolean
+  reason: string | null
+  checkedInAt: string | null
+}
+
+export interface CheckInRecord {
+  reference: string
+  touristName: string
+  packageId: number
+  packageName: string
+  startsAt: string
+  partySize: number
+  arrivedAt: string
+  receptionistName: string
+}
+
+export interface CheckInPage {
+  checkIns: CheckInRecord[]
+  page: number
+  pageSize: number
+  total: number
+}
+
+export interface AttendanceTourTotal {
+  packageId: number
+  packageName: string
+  checkIns: number
+  visitors: number
+}
+
+export interface AttendanceSummary {
+  date: string
+  totalCheckIns: number
+  totalVisitors: number
+  tours: AttendanceTourTotal[]
+}
+

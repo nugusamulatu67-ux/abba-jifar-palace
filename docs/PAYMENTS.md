@@ -39,4 +39,4 @@ There is no refund status. If a paid booking is later cancelled under the bookin
 
 ## What this phase does not do
 
-Visitor check-in and scanning the QR code at the desk are a later phase. Cancelling a paid booking does not calculate a refund.
+Reception check-in is described in [CHECKIN.md](CHECKIN.md). Cancelling a paid booking does not calculate a refund.

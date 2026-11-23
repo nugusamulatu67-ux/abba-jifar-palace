@@ -70,6 +70,13 @@ export function AdminHubPage() {
                 Manage payments
               </Link>
             </article>
+            <article className="info-card">
+              <h2>Check-ins</h2>
+              <p>See who arrived, which tour they joined, and who checked them in.</p>
+              <Link className="button" to="/admin/check-ins">
+                View check-ins
+              </Link>
+            </article>
           </div>
         </>
       )}

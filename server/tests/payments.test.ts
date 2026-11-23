@@ -270,12 +270,16 @@ describe('payments and tickets', { concurrency: 1 }, () => {
 
   test('a failed ticket insert rolls the payment back', async () => {
     const reference = await book(`Phase7 Rollback ${stamp}`, touristCookie, 1, 100)
+    const bookingId = await bookingIdFor(reference)
     await pool.query(`
       CREATE OR REPLACE FUNCTION phase7_block_ticket() RETURNS trigger
       LANGUAGE plpgsql
       AS $$
       BEGIN
-        RAISE EXCEPTION 'phase7_ticket_failure' USING ERRCODE = '23514';
+        IF NEW.booking_id = ${Number(bookingId)} THEN
+          RAISE EXCEPTION 'phase7_ticket_failure' USING ERRCODE = '23514';
+        END IF;
+        RETURN NEW;
       END;
       $$
     `)
