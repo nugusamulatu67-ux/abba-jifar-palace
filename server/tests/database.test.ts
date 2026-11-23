@@ -50,7 +50,7 @@ async function withClient<T>(work: (client: PoolClient) => Promise<T>): Promise<
 test.before(async () => {
   await recreateTestDatabase()
   const applied = await migrate(testDatabaseUrl.toString())
-  assert.deepEqual(applied, ['001_init.sql', '002_auth_roles.sql'])
+  assert.deepEqual(applied, ['001_init.sql', '002_auth_roles.sql', '003_tour_package_details.sql'])
   const appliedAgain = await migrate(testDatabaseUrl.toString())
   assert.deepEqual(appliedAgain, [])
   testPool = new Pool({ connectionString: testDatabaseUrl.toString() })

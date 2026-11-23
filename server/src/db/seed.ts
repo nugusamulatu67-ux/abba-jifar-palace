@@ -9,6 +9,9 @@ interface SeedPackage {
   description: string
   priceEtb: number
   durationMinutes: number
+  category: string
+  includedActivities: string
+  maxGroupSize: number
 }
 
 interface SeedSchedule {
@@ -31,18 +34,27 @@ const packages: SeedPackage[] = [
     description: 'A guided walk through the halls and history of Abba Jifar Palace.',
     priceEtb: 300,
     durationMinutes: 90,
+    category: 'History',
+    includedActivities: 'Guided walk through the palace halls',
+    maxGroupSize: 20,
   },
   {
     name: 'Museum and Garden Walk',
     description: 'The palace museum collections and the garden, at a slower pace.',
     priceEtb: 200,
     durationMinutes: 60,
+    category: 'Museum and garden',
+    includedActivities: 'Museum collections and the garden',
+    maxGroupSize: 15,
   },
   {
     name: 'Full Heritage Visit',
     description: 'The history tour plus time in the museum and garden.',
     priceEtb: 500,
     durationMinutes: 150,
+    category: 'Full visit',
+    includedActivities: 'History tour, museum, and garden',
+    maxGroupSize: 12,
   },
 ]
 
@@ -121,10 +133,20 @@ export async function seed(connectionString: string): Promise<void> {
 
     for (const tourPackage of packages) {
       await client.query(
-        `INSERT INTO tour_packages (name, description, price_etb, duration_minutes)
-         VALUES ($1, $2, $3, $4)
+        `INSERT INTO tour_packages (
+           name, description, price_etb, duration_minutes, category, included_activities, max_group_size
+         )
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
          ON CONFLICT (name) DO NOTHING`,
-        [tourPackage.name, tourPackage.description, tourPackage.priceEtb, tourPackage.durationMinutes],
+        [
+          tourPackage.name,
+          tourPackage.description,
+          tourPackage.priceEtb,
+          tourPackage.durationMinutes,
+          tourPackage.category,
+          tourPackage.includedActivities,
+          tourPackage.maxGroupSize,
+        ],
       )
     }
 

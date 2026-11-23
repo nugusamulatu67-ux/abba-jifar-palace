@@ -13,11 +13,12 @@ These phases are the product. Rough times assume one small team working in Curso
 | 1. Foundation | Tooling, folders, docs, health check, database connection | — | Done |
 | 2. Schema | PostgreSQL tables, keys, capacity rules, migration, and seed data | Phase 1 | Done |
 | 3. Access | Register, sign in, password hashing, role checks on the server | Phase 2 | Done |
-| 4. Public site | Palace introduction, gallery, visit information, announcements, and tour themes. Administrator tour editing comes later | Phase 3 | Done on this branch |
-| 5. Bookings | A visitor books a tour and date. Staff can see all bookings. A visitor sees only their own | Phase 4 | 4 hours |
-| 6. Visitors and payments | Staff record people on a booking and mark it unpaid or paid | Phase 5 | 3 hours |
-| 7. Dashboard | Staff and administrator screens that use the records from phases 5 and 6 | Phase 6 | 3 hours |
-| 8. Test and handoff | Walk through every role, fix breakages, and update the README with anything that changed | Phase 7 | 2 hours |
+| 4. Public site | Palace introduction, gallery, visit information, announcements, and tour themes | Phase 3 | Done |
+| 5. Tour packages and schedules | Administrators manage packages and departures. Visitors browse active packages, prices, and remaining seats. Booking is not open yet | Phase 4 | Done on this branch |
+| 6. Bookings | A visitor books a tour and date. Staff can see all bookings. A visitor sees only their own | Phase 5 | 4 hours |
+| 7. Visitors and payments | Staff record people on a booking and mark it unpaid or paid | Phase 6 | 3 hours |
+| 8. Dashboard | Staff and administrator screens that use the records from phases 6 and 7 | Phase 7 | 3 hours |
+| 9. Test and handoff | Walk through every role, fix breakages, and update the README with anything that changed | Phase 8 | 2 hours |
 
 ### Module order
 
@@ -26,13 +27,14 @@ flowchart LR
   foundation[1 Foundation]
   schema[2 Schema]
   access[3 Access]
-  tours[4 Tours]
-  bookings[5 Bookings]
-  records[6 Visitors and payments]
-  dashboard[7 Dashboard]
-  handoff[8 Test and handoff]
+  publicSite[4 Public site]
+  packages[5 Packages and schedules]
+  bookings[6 Bookings]
+  records[7 Visitors and payments]
+  dashboard[8 Dashboard]
+  handoff[9 Test and handoff]
 
-  foundation --> schema --> access --> tours --> bookings --> records --> dashboard --> handoff
+  foundation --> schema --> access --> publicSite --> packages --> bookings --> records --> dashboard --> handoff
 ```
 
 Bookings need tours and accounts. Visitor records and payments need a booking to attach to. The dashboard needs those records to exist, so it comes after them rather than as an empty shell in the middle.
@@ -57,7 +59,7 @@ Do these only after the essential path works. They are outside the agreed first 
 | Card or mobile-money payments | The first version records payment at the palace |
 | Photo uploads | Bookings do not need files to be usable |
 | Charts on the dashboard | Lists are enough for the first handover |
-| Production hosting and a custom domain | After the local walkthrough in Phase 8 |
+| Production hosting and a custom domain | After the local walkthrough in Phase 9 |
 
 ## How to work each phase
 

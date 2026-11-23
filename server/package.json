@@ -7,7 +7,7 @@
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test tests/**/*.test.ts",
+    "test": "tsx --test --test-force-exit tests/**/*.test.ts",
     "db:up": "tsx src/scripts/db-up.ts",
     "db:down": "tsx src/scripts/db-down.ts",
     "db:migrate": "tsx src/scripts/migrate.ts",

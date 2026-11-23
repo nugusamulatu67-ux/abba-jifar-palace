@@ -2,7 +2,7 @@
 
 Tour booking and visitor management website for Abba Jifar Palace, a historical heritage site in Jimma, Ethiopia.
 
-Phase 1 set up the environment and a health check. Phase 2 adds the PostgreSQL schema, migrations, and seed data. Phase 3 adds sign-in, tourist registration, and role checks. Phase 4 adds the public palace pages. Booking is not open yet.
+Phase 1 set up the environment and a health check. Phase 2 adds the PostgreSQL schema, migrations, and seed data. Phase 3 adds sign-in, tourist registration, and role checks. Phase 4 adds the public palace pages. Phase 5 lets an administrator manage tour packages and schedules, and lets visitors browse the active ones. Booking is not open yet.
 
 ## Stack
 
@@ -72,4 +72,6 @@ Phase 2: PostgreSQL schema, migrations, seed data, and booking integrity rules.
 
 Phase 3: tourist registration, sign-in, logout, and server-side role checks.
 
-Phase 4: public pages for the palace, gallery, visit information, announcements, and tour themes. Booking is still a later phase.
+Phase 4: public pages for the palace, gallery, visit information, announcements, and tour themes.
+
+Phase 5: administrator management of tour packages and schedules, and public pages that show active packages, prices, durations, and upcoming seats. Booking is still a later phase.

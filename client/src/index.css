@@ -481,7 +481,9 @@ button.button {
 .button:focus-visible,
 .site-header a:focus-visible,
 .site-header button:focus-visible,
-.form input:focus-visible {
+.form input:focus-visible,
+.form textarea:focus-visible,
+.form select:focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 2px;
 }
@@ -565,7 +567,9 @@ button.button {
   font-weight: 700;
 }
 
-.form input {
+.form input,
+.form textarea,
+.form select {
   width: 100%;
   border: 1px solid #cfc5b3;
   border-radius: 8px;
@@ -573,6 +577,85 @@ button.button {
   background: #fff;
   color: var(--ink);
   font: inherit;
+}
+
+.admin-page {
+  padding: 1.5rem 0 3rem;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.filters label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 700;
+}
+
+.filters input,
+.filters select {
+  min-width: 14rem;
+  border: 1px solid #cfc5b3;
+  border-radius: 8px;
+  padding: 0.55rem 0.7rem;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--paper);
+}
+
+th,
+td {
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.row-actions button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--green);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+}
+
+.facts dt {
+  font-weight: 700;
+}
+
+.facts dd {
+  margin: 0.2rem 0 0;
 }
 
 .optional,
@@ -591,7 +674,8 @@ code {
   .split,
   .footer-grid,
   .card-grid,
-  .frame-grid {
+  .frame-grid,
+  .facts {
     grid-template-columns: 1fr;
   }
 

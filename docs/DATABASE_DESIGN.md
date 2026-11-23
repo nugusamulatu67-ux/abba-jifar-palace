@@ -29,7 +29,7 @@ Phase 1 had an empty SQLite file and no tables. That file is unused. Nothing was
 | `roles` | Administrator, tourist, tour guide, and receptionist | `name` is unique |
 | `users` | Accounts | Unique lowercase email, password hash, status `active` or `inactive` |
 | `tourists` | Customer profile | Optional unique `user_id` for a registered visitor |
-| `tour_packages` | Tour listing | Unique name, price in whole ETB, status `active` or `inactive` |
+| `tour_packages` | Tour listing | Unique name, whole-ETB price from 0 to 1,000,000, duration from 1 to 1,440 minutes, optional group size, status `active`, `inactive`, or `archived` |
 | `tour_schedules` | One departure | Unique package + start time, `max_capacity` greater than 0, end time after start |
 | `bookings` | A tourist reserving seats | Party size greater than 0. Status `pending`, `confirmed`, or `cancelled` |
 | `payments` | Money recorded for a booking | Exactly one row per booking. Status `unpaid` or `paid`. Method `cash` or `transfer` |

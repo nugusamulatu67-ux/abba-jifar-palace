@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import type { HealthResponse } from '../../../shared/src/index.ts'
+import type { HealthResponse, PublicTourPackage } from '../../../shared/src/index.ts'
+import { api } from '../api.ts'
 import { PhotoFrame } from '../components/PhotoFrame.tsx'
 import { usePageTitle } from '../components/usePageTitle.ts'
 import { VerifyNote } from '../components/VerifyNote.tsx'
-import { gallerySlots, tourThemes, verifiedFacts } from '../content/publicSite.ts'
+import { gallerySlots, verifiedFacts } from '../content/publicSite.ts'
+import { formatDuration, formatPrice } from '../format.ts'
 
 type LoadState =
   | { kind: 'loading' }
@@ -14,6 +16,7 @@ type LoadState =
 export function HomePage() {
   usePageTitle('Home')
   const [state, setState] = useState<LoadState>({ kind: 'loading' })
+  const [tours, setTours] = useState<PublicTourPackage[]>([])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -34,6 +37,22 @@ export function HomePage() {
         setState({ kind: 'error', message })
       })
 
+    return () => controller.abort()
+  }, [])
+
+  useEffect(() => {
+    const controller = new AbortController()
+    api<{ packages: PublicTourPackage[] }>('/api/tours', { signal: controller.signal })
+      .then((result) => {
+        if (result.ok && result.data) {
+          setTours(result.data.packages.slice(0, 3))
+        }
+      })
+      .catch((caught: unknown) => {
+        if (caught instanceof DOMException && caught.name === 'AbortError') {
+          return
+        }
+      })
     return () => controller.abort()
   }, [])
 
@@ -114,19 +133,23 @@ export function HomePage() {
               <p className="eyebrow">Tours</p>
               <h2>Ways to see the palace</h2>
             </div>
-            <Link to="/tours">View tour themes</Link>
+            <Link to="/tours">View available tours</Link>
           </div>
-          <p className="section-intro">
-            These descriptions are already stored for development. Booking, dates, and prices are not part of this page.
-          </p>
+          <p className="section-intro">Prices and durations come from the tours that are currently open.</p>
           <div className="card-grid">
-            {tourThemes.map((tour) => (
-              <article key={tour.name} className="info-card">
+            {tours.map((tour) => (
+              <article key={tour.id} className="info-card">
                 <h3>{tour.name}</h3>
                 <p>{tour.description}</p>
+                <p>
+                  <strong>{formatPrice(tour.priceEtb)}</strong>
+                  <span className="muted"> · {formatDuration(tour.durationMinutes)}</span>
+                </p>
+                <Link to={`/tours/${tour.id}`}>View tour</Link>
               </article>
             ))}
           </div>
+          {tours.length === 0 && <p>Open tours will appear here when the palace publishes them.</p>}
         </div>
       </section>
 

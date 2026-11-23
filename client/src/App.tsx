@@ -5,13 +5,18 @@ import { ProtectedRoute } from './components/ProtectedRoute.tsx'
 import { AboutPage } from './pages/AboutPage.tsx'
 import { AnnouncementsPage } from './pages/AnnouncementsPage.tsx'
 import { AreaPage } from './pages/AreaPage.tsx'
+import { BookingHoldPage } from './pages/BookingHoldPage.tsx'
 import { GalleryPage } from './pages/GalleryPage.tsx'
 import { HomePage } from './pages/HomePage.tsx'
 import { LoginPage } from './pages/LoginPage.tsx'
 import { ProfilePage } from './pages/ProfilePage.tsx'
 import { RegisterPage } from './pages/RegisterPage.tsx'
+import { TourDetailPage } from './pages/TourDetailPage.tsx'
 import { ToursPage } from './pages/ToursPage.tsx'
 import { VisitPage } from './pages/VisitPage.tsx'
+import { AdminHubPage } from './pages/admin/AdminHubPage.tsx'
+import { PackageFormPage, PackageListPage } from './pages/admin/PackagePages.tsx'
+import { ScheduleFormPage, ScheduleListPage } from './pages/admin/SchedulePages.tsx'
 
 function Narrow({ children }: { children: ReactNode }) {
   return <div className="narrow">{children}</div>
@@ -27,6 +32,17 @@ export default function App() {
         <Route path="/visit" element={<VisitPage />} />
         <Route path="/announcements" element={<AnnouncementsPage />} />
         <Route path="/tours" element={<ToursPage />} />
+        <Route path="/tours/:id" element={<TourDetailPage />} />
+        <Route
+          path="/tours/:id/book"
+          element={
+            <ProtectedRoute>
+              <Narrow>
+                <BookingHoldPage />
+              </Narrow>
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/login"
           element={
@@ -57,14 +73,55 @@ export default function App() {
           path="/admin"
           element={
             <ProtectedRoute>
-              <Narrow>
-                <AreaPage
-                  eyebrow="Staff"
-                  title="Administration"
-                  intro="This area is reserved for the administrator. Tour, booking, and staff tools will be added in later phases."
-                  endpoint="/api/admin/access"
-                />
-              </Narrow>
+              <AdminHubPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/tours"
+          element={
+            <ProtectedRoute>
+              <PackageListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/tours/new"
+          element={
+            <ProtectedRoute>
+              <PackageFormPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/tours/:id"
+          element={
+            <ProtectedRoute>
+              <PackageFormPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/schedules"
+          element={
+            <ProtectedRoute>
+              <ScheduleListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/schedules/new"
+          element={
+            <ProtectedRoute>
+              <ScheduleFormPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/schedules/:id"
+          element={
+            <ProtectedRoute>
+              <ScheduleFormPage />
             </ProtectedRoute>
           }
         />

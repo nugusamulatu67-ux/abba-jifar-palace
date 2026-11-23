@@ -3,7 +3,7 @@ import { createServer } from 'node:http'
 import type { AddressInfo } from 'node:net'
 import { describe, test } from 'node:test'
 import { env } from '../src/config/env.ts'
-import { closePool, pool } from '../src/config/database.ts'
+import { pool } from '../src/config/database.ts'
 import { migrate } from '../src/db/migrate.ts'
 import { seed } from '../src/db/seed.ts'
 import { createApp } from '../src/app.ts'
@@ -35,7 +35,6 @@ test.after(async () => {
     `DELETE FROM guides WHERE user_id IN (SELECT id FROM users WHERE email LIKE 'phase3-%@abba-jifar.local')`,
   )
   await pool.query(`DELETE FROM users WHERE email LIKE 'phase3-%@abba-jifar.local'`)
-  await closePool()
 })
 
 test('a tourist can register, sign in, and is never given a staff role', async () => {
